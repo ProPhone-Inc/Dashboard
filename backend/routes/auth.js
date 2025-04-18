@@ -1,0 +1,34 @@
+const express = require("express");
+const router = express.Router();
+const { register, login,insertteam,getnotifications,handleloginuser,editteammember,suspendteammember,deletemember,editname,fetchteammember,sendMagicCode,addteammember,checkteam,sendnotification,testemail,gettemplate,emailtemplate,checkauthentication,forgetpassword,edituser, verifycode,registeruser,activateuser,deleteuser,banuser,resetpassword,adduser,fetchusers } = require("../controllers/auth");
+
+router.post("/register", register);
+router.post("/login", login);
+router.post("/sendemail", sendMagicCode);
+router.post("/forget-password", forgetpassword);
+router.post("/verify-code", verifycode);
+router.post("/register-user", registeruser);
+router.post("/reset-password", resetpassword);
+router.post("/add-user", adduser);
+router.post("/ban-user", banuser);
+router.post("/delete-user", deleteuser);
+router.post("/activate-user", activateuser);
+router.get("/fetch-users", fetchusers);
+router.post("/edit-user", edituser);
+router.post("/set-template", emailtemplate);
+router.get("/get-template", gettemplate);
+router.get("/test-email", testemail);
+router.get("/check-authentication", checkauthentication);
+router.post("/send-notification", sendnotification);
+router.get("/check-team", checkteam);
+router.post("/insert-team", insertteam);
+router.post("/add-team-member", addteammember);
+router.post("/edit-team-name", editname);
+router.get("/fetch-team-members", fetchteammember);
+router.post("/delete-team-name", deletemember);
+router.post("/suspend-team-member", suspendteammember);
+router.post("/edit-team-member", editteammember);
+router.post("/handle-user-login", handleloginuser);
+router.get("/get-notifications", getnotifications);
+
+module.exports = router;
