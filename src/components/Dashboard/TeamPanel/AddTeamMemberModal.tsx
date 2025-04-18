@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { X, User, Mail, Shield, Phone, Users, FileText, GitMerge } from 'lucide-react';
+import { X, User, Mail, Shield, FileText, GitMerge } from 'lucide-react';
 
 interface AddTeamMemberModalProps {
   onClose: () => void;
@@ -26,8 +26,6 @@ export function AddTeamMemberModal({ onClose, onAdd }: AddTeamMemberModalProps) 
   });
 
   const availablePermissions = [
-    { id: 'phone', label: 'Phone System', icon: <Phone className="w-4 h-4" /> },
-    { id: 'crm', label: 'CRM', icon: <Users className="w-4 h-4" /> },
     { id: 'docupro', label: 'DocuPro', icon: <FileText className="w-4 h-4" /> },
     { id: 'proflow', label: 'ProFlow', icon: <GitMerge className="w-4 h-4" /> }
   ];

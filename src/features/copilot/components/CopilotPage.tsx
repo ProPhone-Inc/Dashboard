@@ -2,7 +2,6 @@ import React from 'react';
 import { Sparkles, Send, Bot, Settings, X } from 'lucide-react';
 import { useCopilot } from '../hooks/useCopilot';
 import { Message } from '../types';
-import { Message } from '../types';
 
 const GEMINI_LOGO = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2L2 7L12 12L22 7L12 2Z' fill='%23B38B3F'/%3E%3Cpath d='M2 17L12 22L22 17' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M2 12L12 17L22 12' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E`;
 
@@ -113,7 +112,7 @@ export function CopilotPage({
               </div>
             </div>
             <div>
-              <div className="flex items-center">
+              <div className="flex items-center space-x-2">
                 <h2 className="text-2xl font-bold bg-gradient-to-r from-[#B38B3F] via-[#FFD700] to-[#B38B3F] text-transparent bg-clip-text">ProPhone Copilot</h2>
                 <div className="ml-2 flex items-center bg-white/10 rounded-full px-2 py-0.5">
                   <img src={GEMINI_LOGO} alt="Gemini" className="w-3.5 h-3.5 mr-1" />

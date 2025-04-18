@@ -35,7 +35,7 @@ export function TeamPanel({ onClose }: TeamPanelProps) {
       email: user?.email || 'owner@example.com',
       role: 'admin',
       status: 'active',
-      permissions: ['phone', 'crm', 'docupro', 'proflow'],
+      permissions: ['dashboard', 'proflow'],
       joinDate: '2025-01-01',
       avatar: user?.avatar
     },
@@ -76,7 +76,7 @@ export function TeamPanel({ onClose }: TeamPanelProps) {
             email: user?.email || 'owner@example.com',
             role: 'admin',
             status: 'active',
-            permissions: ['phone', 'crm', 'docupro', 'proflow'],
+            permissions: ['dashboard', 'proflow'],
             joinDate: '2025-01-01',
             avatar: user?.avatar
           },

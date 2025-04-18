@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { X, User, Mail, Shield, Settings, Send } from 'lucide-react';
+import { X, User, Mail, Shield, Settings, Send, FileText, GitMerge } from 'lucide-react';
 import { AssignPermissionsModal } from './AssignPermissionsModal';
 import { sendTeamInvite } from '../../../../utils/email';
 
@@ -25,7 +25,7 @@ export function AddTeamMemberModal({ onClose, modalRef, onAdd }: AddTeamMemberMo
     firstName: '',
     lastName: '',
     role: 'member' as 'member'  | 'admin',
-    permissions: ['dashboard'] // Dashboard permission by default
+    permissions: ['dashboard', 'docupro', 'proflow'] // Dashboard permission by default
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -169,14 +169,14 @@ export function AddTeamMemberModal({ onClose, modalRef, onAdd }: AddTeamMemberMo
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-white/70 text-sm font-medium">Permissions</label>
-            <button
-              type="button"
-              onClick={() => setShowPermissions(true)}
-              className="text-[#B38B3F] hover:text-[#FFD700] text-sm font-medium transition-colors flex items-center space-x-1"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowPermissions(true)}
+                className="text-[#B38B3F] hover:text-[#FFD700] text-sm font-medium transition-colors flex items-center space-x-1"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
             </div>
             <div className="bg-zinc-800 border border-[#B38B3F]/20 rounded-lg p-3">
               {formData.permissions.length === 0 ? (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, User, Mail, Shield } from 'lucide-react';
+import { X, User, Mail, Shield, FileText, GitMerge } from 'lucide-react';
 
 interface EditTeamMemberModalProps {
   member: any;
@@ -13,9 +13,6 @@ export function EditTeamMemberModal({ member, onClose, onSave }: EditTeamMemberM
   });
 
   const availablePermissions = [
-    { id: 'phone', label: 'Phone System' },
-    { id: 'crm', label: 'CRM' },
-    { id: 'docupro', label: 'DocuPro' },
     { id: 'proflow', label: 'ProFlow' }
   ];
 

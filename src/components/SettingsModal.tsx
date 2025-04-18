@@ -1,12 +1,8 @@
 import React from 'react';
-import { X, User, CreditCard, Globe, ArrowRight, MessageSquare, Phone, Calendar } from 'lucide-react';
+import { X, User, CreditCard, ArrowRight } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { ProfileSection } from './Dashboard/Settings/sections/ProfileSection';
 import { BillingSection } from './Dashboard/Settings/BillingSection';
-import { PhoneNumbersSection } from './Dashboard/Settings/sections/PhoneNumbersSection';
-import { IntegrationsSection } from './Dashboard/Settings/sections/IntegrationsSection';
-import { CalendarSection } from './Dashboard/Settings/sections/CalendarSection';
-import { SMSSettings } from './Dashboard/Settings/sections/SMSSettings';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -39,34 +35,6 @@ export function SettingsModal({ isOpen, onClose, initialSection = 'profile', set
       description: 'View and manage your subscription plan',
       icon: <CreditCard className="w-6 h-6" />,
       component: <BillingSection userData={user} />
-    },
-    {
-      id: 'numbers',
-      label: 'Phone Numbers',
-      description: 'Manage your phone numbers',
-      icon: <Phone className="w-6 h-6" />,
-      component: <PhoneNumbersSection />
-    },
-    {
-      id: 'integrations',
-      label: 'Integrations',
-      description: 'Connect and manage your external services',
-      icon: <Globe className="w-6 h-6" />,
-      component: <IntegrationsSection />
-    },
-    {
-      id: 'calendar',
-      label: 'Calendar Settings',
-      description: 'Configure calendar preferences and sync',
-      icon: <Calendar className="w-6 h-6" />,
-      component: <CalendarSection />
-    },
-    {
-      id: 'sms',
-      label: 'SMS Settings',
-      description: 'Manage SMS preferences and automation',
-      icon: <MessageSquare className="w-6 h-6" />,
-      component: <SMSSettings />
     }
   ];
 

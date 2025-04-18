@@ -1,22 +1,22 @@
 /**
- * Utility functions for interacting with Google's Gemini 2.0 Flash API
+ * Utility functions for interacting with Google's Gemini API
  */
 
 /**
- * Generate a response from Gemini 2.0 Flash
+ * Generate a response from Gemini
  * @param prompt The user's prompt
  * @param apiKey The Gemini API key
- * @param systemPrompt Optional system prompt to guide the model
+ * @param systemPrompt Optional system prompt to guide the model (will be prepended to the user prompt)
  * @returns The generated response text
  */
 export async function generateGeminiResponse(
   prompt: string,
-  apiKey: string = 'AIzaSyCJ6kLKlCo6eW-sp88ktlOvntiq7ASzQ4M',
+  apiKey: string = 'AIzaSyCJ6kLKlCo6eW-sp88ktlOvntiq7ASzQ4M', // Default API key
   systemPrompt?: string
 ): Promise<string> {
   try {
-    // Construct the API URL with the API key
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${apiKey}`;
+    // Construct the API URL with the API key - using gemini-2.0-flash model
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
     // Prepare the request body
     const requestBody: any = {
@@ -36,6 +36,7 @@ export async function generateGeminiResponse(
     
     // Add system prompt if provided
     if (systemPrompt) {
+      // For Gemini 2.0 Flash, prepend the system prompt to the user message
       requestBody.contents.unshift({
         role: "system",
         parts: [{ text: systemPrompt }]
@@ -53,8 +54,8 @@ export async function generateGeminiResponse(
     
     // Handle API errors
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || 'Failed to generate response');
+      const errorData = await response.json().catch(() => ({ error: { message: 'Unknown error' } }));
+      throw new Error(errorData.error?.message || 'Failed to generate response from Gemini');
     }
     
     // Parse the response
@@ -62,7 +63,7 @@ export async function generateGeminiResponse(
     
     // Extract the generated text from the response
     if (!data.candidates || data.candidates.length === 0) {
-      throw new Error('No response generated');
+      throw new Error('No response generated from Gemini');
     }
     
     const generatedText = data.candidates[0].content.parts

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Phone, Users, FileText, GitMerge } from 'lucide-react';
+import { X, FileText, GitMerge } from 'lucide-react';
 
 interface AssignPermissionsModalProps {
   permissions: string[];
@@ -24,9 +24,6 @@ export function AssignPermissionsModal({ permissions: initialPermissions, onClos
       </svg>,
       required: true
     },
-    { id: 'phone', label: 'Phone System', icon: <Phone className="w-5 h-5" /> },
-    { id: 'crm', label: 'CRM', icon: <Users className="w-5 h-5" /> },
-    { id: 'docupro', label: 'DocuPro', icon: <FileText className="w-5 h-5" /> },
     { id: 'proflow', label: 'ProFlow', icon: <GitMerge className="w-5 h-5" /> }
   ];
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, GitMerge, FileText, Users, X, ListChecks, Mail, DollarSign } from 'lucide-react';
+import { GitMerge, X } from 'lucide-react';
 
 interface AppDrawerProps {
   isOpen: boolean;
@@ -10,12 +10,7 @@ interface AppDrawerProps {
 
 export const AppDrawer = React.forwardRef<HTMLDivElement, AppDrawerProps>(({ isOpen, onClose, onAppSelect, currentApp }, ref) => {
   const apps = [
-    { id: 'phone', name: 'Phone System', icon: <Phone className="w-5 h-5" /> },
-    { id: 'proflow', name: 'ProFlow Automation', icon: <GitMerge className="w-5 h-5" /> },
-    { id: 'docupro', name: 'DocuPro', icon: <FileText className="w-5 h-5" /> },
-    { id: 'crm', name: 'CRM System', icon: <Users className="w-5 h-5" /> },
-    { id: 'email', name: 'Email System', icon: <Mail className="w-5 h-5" /> },
-    { id: 'investor', name: 'Investor Resources', icon: <DollarSign className="w-5 h-5" /> }
+    { id: 'proflow', name: 'ProFlow Automation', icon: <GitMerge className="w-5 h-5" /> }
   ];
 
   if (!isOpen) return null;

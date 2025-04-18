@@ -8,7 +8,7 @@ import { useAudio } from '../hooks/useAudio';
 import { useUnreadMessages } from '../hooks/useUnreadMessages';
 import { Message } from '../types';
 
-const GEMINI_LOGO = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2L2 7L12 12L22 7L12 2Z' fill='%23B38B3F'/%3E%3Cpath d='M2 17L12 22L22 17' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M2 12L12 17L22 12' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E`;
+
 
 export function CopilotBubble() {
   const { apiKey, provider } = useCopilot();
@@ -49,7 +49,7 @@ export function CopilotBubble() {
   }, [provider, apiKey]);
 
   const getWelcomeMessage = () => {
-    return "Hi there! 👋 I'm Dawson, your ProPhone CoPilot powered by Google Gemini 2.0 Flash. I'm ready to help with automation workflows, templates, designs, and more. How can I assist you today?";
+    return "Hi there! 👋 I'm your ProPhone CoPilot powered by Google Gemini 2.0 Flash. I'm ready to help with automation workflows, templates, designs, and more. How can I assist you today?";
   };
 
   return (
@@ -105,9 +105,6 @@ export function CopilotBubble() {
       >
         <div className="relative">
           <Sparkles className={`w-6 h-6 z-10 transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`} />
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-white flex items-center justify-center">
-            <img src={GEMINI_LOGO} alt="Gemini" className="w-2.5 h-2.5" />
-          </div>
         </div>
         
         {/* Soundwave rings */}

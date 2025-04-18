@@ -1,9 +1,9 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import { Bell, Menu, X, User, LogOut, Calendar, MessageSquare, Shield, HelpCircle, Phone, Settings, Mail, CreditCard, Ban, ArrowLeft } from 'lucide-react';
+import { Bell, Menu, X, User, LogOut, Calendar, MessageSquare, Shield, HelpCircle, Settings, Mail, CreditCard, Ban, ArrowLeft } from 'lucide-react';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { CalendarModal } from './Calendar';
-import { useAuth } from '../../hooks/useAuth'; 
+import { useAuth } from '../../hooks/useAuth';
 import { useSystemNotifications } from '../../hooks/useSystemNotifications';
 import { SystemNotificationsPanel } from './SystemNotificationsPanel';
 import { useNotifications } from '../../hooks/useNotifications';
@@ -137,7 +137,7 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
   };
 
   return (
-    <header className="h-16 bg-zinc-900 flex items-center justify-between px-4 z-10 relative">
+    <header className="h-16 bg-zinc-900 flex items-center justify-between px-4 z-30 relative">
       <div className="absolute inset-x-0 bottom-0 h-[2px] bg-[#B38B3F]/20">
         <div className="absolute inset-0 bg-gradient-to-r from-[#B38B3F]/0 via-[#FFD700]/50 to-[#B38B3F]/0 animate-[glow_4s_ease-in-out_infinite] shadow-[0_0_15px_rgba(255,215,0,0.3)]" />
       </div>
@@ -347,7 +347,6 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
                       )}
                       <div className="flex items-center space-x-2 mt-0.5">
                         {message.type === 'email' && <Mail className="w-3 h-3 text-[#FFD700]" />}
-                        {message.type === 'call' && <Phone className="w-3 h-3 text-[#FFD700]" />}
                         {message.type === 'sms' && <MessageSquare className="w-3 h-3 text-[#FFD700]" />}
                         <span className="text-sm font-medium text-white/90">{message.title}</span>
                       </div>

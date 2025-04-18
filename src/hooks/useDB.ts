@@ -25,8 +25,8 @@ export function useDB() {
 
   const getContacts = async () => {
     if (!user?.id) return [];
-    const { data } = await api.get('/contacts');
-    return data;
+    // CRM functionality removed
+    return [];
   };
 
   const getChatHistory = async (limit?: number) => {
@@ -83,29 +83,7 @@ export function useDB() {
   const getTeamMembers = async () => {
     try {
       // Return mock data with owner as only admin
-      return [
-        {
-          id: '1',
-          name: 'Dallas Reynolds',
-          email: 'dallas@prophone.io',
-          role: 'owner',
-          permissions: ['phone', 'crm', 'docupro', 'proflow']
-        },
-        {
-          id: '2',
-          name: 'Mike Chen',
-          email: 'mike@example.com',
-          role: 'member',
-          permissions: ['phone', 'crm', 'docupro', 'proflow']
-        },
-        {
-          id: '3',
-          name: 'Emma Wilson',
-          email: 'emma@example.com',
-          role: 'member',
-          permissions: ['phone', 'crm', 'docupro', 'proflow']
-        }
-      ];
+      return [];
     } catch (error) {
       console.error('Failed to fetch team members:', error);
       return [];

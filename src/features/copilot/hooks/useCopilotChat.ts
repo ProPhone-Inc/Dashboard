@@ -52,6 +52,7 @@ export function useCopilotChat({
       // API call and response handling
       // Get API key from store or environment
       const { apiKey, systemPrompt } = useCopilot.getState();
+      // Use the provided API key
       const effectiveApiKey = apiKey || 'AIzaSyCJ6kLKlCo6eW-sp88ktlOvntiq7ASzQ4M';
       
       // Generate response using Gemini

@@ -1,16 +1,11 @@
 import React from 'react';
-import { X, User, Bot, CreditCard } from 'lucide-react';
+import { X, User, CreditCard, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useDB } from '../../../hooks/useDB';
 import { db } from '../../../db';
 import { ProfileSection } from './sections/ProfileSection';
 import { BillingSection } from './BillingSection';
-import { PhoneNumbersSection } from './sections/PhoneNumbersSection';
 import { useEffect } from 'react';
-import { IntegrationsSection } from './sections/IntegrationsSection';
-import { CalendarSection } from './sections/CalendarSection';
-import { SMSSettings } from './sections/SMSSettings';
-import { CopilotSection } from './CopilotSection';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -63,15 +58,7 @@ export function SettingsModal({ isOpen, onClose, initialSection = 'profile' }: S
       label: 'Subscription & Billing',
       description: 'Manage your subscription and payments',
       icon: <CreditCard className="w-5 h-5" />,
-      component: <BillingSection userData={user} onClose={onClose} setShowTeamPanel={setShowTeamPanel} />
-    },
-    {
-      id: 'copilot',
-      label: 'CoPilot Settings',
-      description: 'Configure your AI assistant',
-      icon: <Bot className="w-5 h-5" />,
-      component: <CopilotSection userData={userData} />,
-      adminOnly: true
+      component: <BillingSection userData={user} onClose={onClose} setShowTeamPanel={setShowTeamPanel || (() => {})} />
     }
   ];
 

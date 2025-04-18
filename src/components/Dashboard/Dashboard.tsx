@@ -1,15 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useCopilot } from '../../hooks/useCopilot';
-import { useCallState } from '../../hooks/useCallState';
-import { KanbanBoard } from '../CRM/KanbanBoard';
 import { CalendarModal } from './Calendar';
-import { useIncomingCalls } from '../../hooks/useIncomingCalls';
-import { useReporting } from '../../hooks/useReporting';
-import { ReportingModal } from './AdminPanel/ReportingModal';
-import { ContactsTable } from '../CRM/ContactsTable';
-import { SMSAutomation } from '../Phone/components/SMSAutomation';
-import { CallLogs } from '../Phone/components/CallLogs';
 import { X } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import Header from './Header';
@@ -20,12 +12,9 @@ import { SMSPerformanceCard } from './SMSPerformanceCard';
 import { TopContacts } from './TopContacts';
 import CopilotBubble from './CopilotBubble';
 import { ErrorBoundary } from '../ErrorBoundary';
-import { PhoneSystem } from '../Phone/PhoneSystem';
 import { TeamPanelModal } from './TeamPanel/components/TeamPanelModal';
-import { EmailClient } from '../Email/EmailClient';
 import { CopilotPage } from './CopilotPage';
 import { AdminPanel } from './AdminPanel';
-import { DocumentSystem } from '../Documents/DocumentSystem';
 
 const ComponentLoader = () => (
   <div className="animate-pulse bg-zinc-800/50 rounded-xl h-full min-h-[200px]" />
@@ -66,8 +55,6 @@ function AdminModal({ isOpen, onClose }: AdminModalProps) {
 export function Dashboard() {
   const { user, logout } = useAuth();
   const { provider, apiKey } = useCopilot();
-  const { activeCall } = useCallState();
-  const { incomingCall, clearIncomingCall } = useIncomingCalls();
   const [collapsed, setCollapsed] = useState(true); // Default to collapsed
   const [token, setToken] = useState("");
   const [activePage, setActivePage] = useState('dashboard');
@@ -77,7 +64,6 @@ export function Dashboard() {
   const [copilotExpanded, setCopilotExpanded] = useState(false);
   const [showProFlow, setShowProFlow] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [showReportingModal, setShowReportingModal] = useState(false);
   const [actionSuccess, setActionSuccess] = useState<{message: string, type: string} | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
@@ -85,11 +71,7 @@ export function Dashboard() {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [selectedLine, setSelectedLine] = useState<string | null>(null);
   const [totalUnreadCount, setTotalUnreadCount] = useState(0);
-  const [showCallLogs, setShowCallLogs] = useState(false);
-  const [showCallModal, setShowCallModal] = useState(false);
-  const [callContact, setCallContact] = useState<{name?: string; number: string} | null>(null);
   const [showDocuPro, setShowDocuPro] = useState(false);
-  const [isIncomingCall, setIsIncomingCall] = useState(false);
   
   // Listen for the custom event to open team panel
   React.useEffect(() => {
@@ -103,17 +85,6 @@ export function Dashboard() {
       window.removeEventListener('open-team-panel', handleOpenTeamPanel);
     };
   }, []);
-
-  const handleMakeCall = (number: string) => {
-    const chat = messages.find(m => m.sender.name === number || m.chatId === number);
-    
-    setCallContact({
-      name: chat?.sender.name,
-      number: number
-    });
-    setShowCallModal(true);
-    setIsIncomingCall(false);
-  };
 
   // Initialize token from auth user
   React.useEffect(() => {
@@ -247,9 +218,7 @@ export function Dashboard() {
     setShowAdminModal(false);
     setShowTeamPanel(false);
     setShowCopilot(false);
-    setShowReportingModal(false);
     setShowCalendar(false);
-    setShowCallLogs(false);
   };
   
   const handleSidebarClick = (page: string) => {
@@ -265,25 +234,9 @@ export function Dashboard() {
       return;
     }
     
-    // Handle call logs
-    if (page === 'call-logs') {
-      setShowCallLogs(true);
-      setActivePage('phone');
-      return;
-    }
-    
     // Handle admin panel access
     if (page === 'admin') {
       setShowAdminModal(true);
-      return;
-    }
-    
-    // Handle reporting panel access
-    if (page === 'reporting') {
-      if (user?.role === 'owner' || user?.role === 'super_admin') {
-        setShowReportingModal(true);
-        return;
-      }
       return;
     }
     
@@ -346,9 +299,7 @@ export function Dashboard() {
           onPageChange={handleSidebarClick}
           token={token}
           setCopilotExpanded={setCopilotExpanded}
-          setShowCallLogs={setShowCallLogs}
           setShowAdminModal={setShowAdminModal}
-          setShowReportingModal={setShowReportingModal}
           setShowTeamPanel={setShowTeamPanel}
           showProFlow={showProFlow}
           setShowProFlow={setShowProFlow}
@@ -368,7 +319,7 @@ export function Dashboard() {
             <div className={`${activePage === 'phone' ? 'h-[calc(100vh-4rem)]' : 'max-w-7xl mx-auto p-4 md:p-6'} w-full`}>
               <>
                 {showProFlow ? (
-                  <div className="fixed top-16 left-16 right-0 bottom-0 z-0">
+                  <div className="fixed top-16 left-16 right-0 bottom-0 z-10">
                     <iframe
                       src={`https://flow.prophone.io/sign-in/?token=${token}`}
                       className="w-full h-full border-none"
@@ -386,7 +337,6 @@ export function Dashboard() {
                       </div>
                       
                       <div className="space-y-6">
-                        <MarketingCard />
                         <TopContacts />
                       </div>
                     </div>
@@ -405,49 +355,42 @@ export function Dashboard() {
                   </ErrorBoundary>
                 )}
                 {activePage === 'crm-contacts' && (
-                  <ErrorBoundary>
-                    <Suspense fallback={<ComponentLoader />}>
-                      <ContactsTable />
-                    </Suspense>
-                  </ErrorBoundary>
+                  <div className="p-8 text-center">
+                    <h2 className="text-2xl font-bold text-white mb-4">CRM System Removed</h2>
+                    <p className="text-white/70">The CRM functionality has been removed from this application.</p>
+                  </div>
                 )}
                 {activePage === 'crm-pipelines' && (
-                  <ErrorBoundary>
-                    <Suspense fallback={<ComponentLoader />}>
-                      <KanbanBoard 
-                        onAddLead={() => {}}
-                        onEditLead={() => {}}
-                        onDeleteLead={() => {}}
-                      />
-                    </Suspense>
-                  </ErrorBoundary>
+                  <div className="p-8 text-center">
+                    <h2 className="text-2xl font-bold text-white mb-4">CRM System Removed</h2>
+                    <p className="text-white/70">The CRM functionality has been removed from this application.</p>
+                  </div>
                 )}
                 {activePage === 'phone' && (
-                  <ErrorBoundary>
-                    <Suspense fallback={<ComponentLoader />}>
-                      <PhoneSystem 
-                        selectedMessage={selectedMessage}
-                        selectedChat={selectedChat}
-                        onMessageSelect={setSelectedMessage}
-                        activePage={activePage}
-                      />
-                    </Suspense>
-                  </ErrorBoundary>
+                  <div className="p-8 text-center">
+                    <h2 className="text-2xl font-bold text-white mb-4">Phone System Removed</h2>
+                    <p className="text-white/70">The phone system functionality has been removed from this application.</p>
+                  </div>
                 )}
                 {activePage === 'sms-campaign' && (
-                  <ErrorBoundary>
-                    <Suspense fallback={<ComponentLoader />}>
-                      <SMSAutomation />
-                    </Suspense>
-                  </ErrorBoundary>
+                  <div className="p-8 text-center">
+                    <h2 className="text-2xl font-bold text-white mb-4">SMS Campaign Removed</h2>
+                    <p className="text-white/70">The SMS campaign functionality has been removed from this application.</p>
+                  </div>
                 )}
                 {activePage.startsWith('docupro-') && (
-                  <DocumentSystem defaultView="transactions" onPageChange={onPageChange} />
+                  <div className="p-8 text-center">
+                    <h2 className="text-2xl font-bold text-white mb-4">DocuPro System Removed</h2>
+                    <p className="text-white/70">The document system functionality has been removed from this application.</p>
+                  </div>
                 )}
                 {activePage.startsWith('email-') && (
                   <ErrorBoundary>
                     <Suspense fallback={<ComponentLoader />}>
-                      <EmailClient />
+                      <div className="p-8 text-center">
+                        <h2 className="text-2xl font-bold text-white mb-4">Email System Removed</h2>
+                        <p className="text-white/70">The email functionality has been removed from this application.</p>
+                      </div>
                     </Suspense>
                   </ErrorBoundary>
                 )}
@@ -456,39 +399,10 @@ export function Dashboard() {
           </main>
         </div>
       </div>
-      {/* Call Logs Modal */}
-      {showCallLogs && (
-        <CallLogs
-          onClose={() => setShowCallLogs(false)}
-          onMakeCall={handleMakeCall}
-        />
-      )}
-      
-      {/* Reporting Modal */}
-      {showReportingModal && (
-        <ReportingModal onClose={() => setShowReportingModal(false)} />
-      )}
       
       {/* Calendar Modal */}
       {showCalendar && (
         <CalendarModal onClose={() => setShowCalendar(false)} />
-      )}
-      
-      {/* Phone Call Modal - Global */}
-      {(showCallModal || activeCall || incomingCall) && (callContact || activeCall || incomingCall) && (
-        <PhoneCallModal
-          onClose={() => {
-            setIsIncomingCall(false);
-            setShowCallModal(false);
-            setCallContact(null);
-            setActiveCall(null);
-            clearIncomingCall();
-          }}
-          contactName={incomingCall?.name || callContact?.name || activeCall?.name}
-          contactNumber={incomingCall?.number || callContact?.number || activeCall?.number}
-          isIncoming={incomingCall?.isIncoming || isIncomingCall}
-          isFloating={activePage === 'phone'}
-        />
       )}
       
       <CopilotBubble />
