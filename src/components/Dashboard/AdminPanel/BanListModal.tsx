@@ -62,7 +62,7 @@ export function BanListModal({ users,onClose }: BanListModalProps) {
     const token = sessionStorage.getItem("token");
     if (!token) return;
 
-    if (!token) return;
+    console.log(`Bearer ${token}`)
     try {
       const res = await axios.post(
         "/api/auth/activate-user",
