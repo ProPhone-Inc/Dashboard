@@ -7,11 +7,15 @@ import { SuccessModal } from './SuccessModal';
 import { useFireworks } from '../hooks/useFireworks';
 import { useMagicSparkles } from '../hooks/useMagicSparkles';
 import { useAuth } from '../hooks/useAuth';
+import { useEffect, useState } from 'react';
 import { useCopilot } from '../hooks/useCopilot';
 import { useCallState } from '../hooks/useCallState';
 import { useIncomingCalls } from '../hooks/useIncomingCalls';
 import { useReporting } from '../hooks/useReporting';
 import { ReportingModal } from './Dashboard/AdminPanel/ReportingModal';
+
+// Import login function from useAuth
+import { useAuth } from '../hooks/useAuth';
 
 const backgroundImage = 'https://dallasreynoldstn.com/wp-content/uploads/2025/02/7FD4503E-BCAE-4AAE-8852-9F7926E959A4.jpeg';
 const logoUrl = 'https://dallasreynoldstn.com/wp-content/uploads/2025/02/26F25F1E-C8E9-4DE6-BEE2-300815C83882.png';
@@ -58,6 +62,12 @@ export function AuthContainer({ onVerified, teamInviteData }: AuthContainerProps
   const [showCalendar, setShowCalendar] = React.useState(false);
   const [showCallLogs, setShowCallLogs] = React.useState(false);
   const usersPerPage = 10;
+  const [showDevButton, setShowDevButton] = useState(false);
+
+  // Only show dev button in development mode
+  useEffect(() => {
+    setShowDevButton(import.meta.env.DEV);
+  }, []);
 
   const resetAllStates = () => {
     setIsCodeLogin(false);
@@ -72,6 +82,18 @@ export function AuthContainer({ onVerified, teamInviteData }: AuthContainerProps
   };
   
   const { isAuthenticated, user } = useAuth();
+  
+  const handleDevLogin = () => {
+    login({
+      id: '0',
+      name: 'Developer User',
+      email: 'dev@example.com',
+      role: 'owner',
+      avatar: 'https://ui-avatars.com/api/?name=Dev+User&background=B38B3F&color=fff'
+    });
+    launchFireworks();
+    setShowSuccessModal(true);
+  };
   
   const containerRef = React.useRef<HTMLDivElement>(null);
   const buttonWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -89,8 +111,28 @@ export function AuthContainer({ onVerified, teamInviteData }: AuthContainerProps
     return () => clearInterval(timer);
   }, [cooldownTime]);
 
+  // Get login function from useAuth
+  const { login } = useAuth();
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-black" ref={containerRef}>
+      {/* Developer login button - positioned absolutely */}
+      {showDevButton && (
+        <button
+          onClick={handleDevLogin}
+          className="fixed bottom-4 right-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all z-[999] flex items-center space-x-2"
+        >
+          <span>Dev Login</span>
+        </button>
+      )}
+      
+      <div 
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
+      >
+        <div className="absolute inset-0 backdrop-blur-[2px] bg-black/25 animated-gradient" />
+      </div>
+
       {showSuccessModal && (
         <SuccessModal 
           onClose={() => setShowSuccessModal(false)} 
@@ -98,6 +140,7 @@ export function AuthContainer({ onVerified, teamInviteData }: AuthContainerProps
           message={isRegistering ? `Welcome to ProPhone, ${formData?.firstName || ''}!` : isAuthenticated ? `Welcome back, ${user?.name}!` : undefined}
         />
       )}
+      
       {showAuthModal && (
         <AuthModal
           mode={authMode}
@@ -112,15 +155,6 @@ export function AuthContainer({ onVerified, teamInviteData }: AuthContainerProps
           }}
         />
       )}
-      
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-
-      <div 
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
-      >
-        <div className="absolute inset-0 backdrop-blur-[2px] bg-black/25 animated-gradient" />
-      </div>
 
       <div className="relative w-full max-w-md p-8">
         <div className="relative bg-black/60 rounded-3xl p-8 shadow-2xl border border-[#B38B3F]/20 transform transition-all duration-500 hover:scale-105 hover:border-[#B38B3F]/40 hover:shadow-[0_0_15px_rgba(255,215,0,0.3)] group">

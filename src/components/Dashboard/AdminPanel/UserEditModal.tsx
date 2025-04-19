@@ -11,8 +11,6 @@ interface UserEditModalProps {
 }
 
 export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
-// const navigate = useNavigate(); 
-
   const [formData, setFormData] = React.useState({
     ...member
   });
@@ -21,10 +19,9 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
 
   const canAssignGodMode = currentUser?.role === 'owner';
   console.log('member',member)
-// alert(member)
+
   const isExecutiveOrSuperAdmin = currentUser?.role === 'executive' || currentUser?.role === 'super_admin';
   const isEditingOwner = member.role === 'owner';
-  // const isEditingOwner = member.role === 'owner';
   const isEditingSuperAdmin = member.role === 'super_admin';
   const isEditingExecutive = member.role === 'executive';
 
@@ -63,7 +60,7 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
     );
   }
 
-  const handleSubmit = async  (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate role changes
@@ -83,14 +80,13 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
     const updatedUser = {
       ...formData,
       showAds: !(formData.role === 'owner' || formData.role === 'super_admin'),
-      plan:"free"
+      plan: "free"
     };
     const token = sessionStorage.getItem("token");
     if (!token) {
       window.location.href = "/login";
       return;
     }
-
 
     try {
       const res = await axios.post("/api/auth/edit-user", updatedUser, {
@@ -101,7 +97,6 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
       });
   
       if (res.status === 200) {
-        // console.log("User updated:", res.data);
         onSave(updatedUser); 
       } else {
         console.warn("Update failed:", res.statusText);
@@ -110,8 +105,6 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
       if (error.response) {
         if (error.response.status === 401) {
           console.error("Token expired or invalid. Redirecting to login...");
-          // Redirect to login page
-          // navigate('/login');
         } else if (error.response.status === 404) {
           console.error("User not found.");
         } else {
@@ -138,7 +131,7 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            {/* <div className="relative">
+            <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-white/40" />
               </div>
@@ -147,71 +140,13 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
                 name="firstname"
                 value={formData.firstname}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
-                required
+                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white focus:outline-none focus:border-[#B38B3F]/50"
+                placeholder="First Name"
               />
-            </div> */}
-            {member.firstname && member.lastname ? (
-  // Show firstname + lastname inputs
-  <>
-            <label className="block text-white/70 text-sm font-medium mb-2">First Name</label>
-
-    <div className="relative">
-
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <User className="h-5 w-5 text-white/40" />
-      </div>
-      <input
-        type="text"
-        name="firstname"
-        value={formData.firstname}
-        onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-        className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
-        required
-      />
-    </div>
-    <label className="block text-white/70 text-sm font-medium mb-2">Last Name</label>
-
-    <div className="relative mt-3">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <User className="h-5 w-5 text-white/40" />
-      </div>
-      <input
-        type="text"
-        name="lastname"
-        value={formData.lastname}
-        onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-        className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
-        required
-      />
-    </div>
-  </>
-) : (
-  <>
-    <label className="block text-white/70 text-sm font-medium mb-2">Name</label>
- 
-  <div className="relative">
-    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-      <User className="h-5 w-5 text-white/40" />
-    </div>
-    <input
-      type="text"
-      name="name"
-      value={formData.name || ""}
-      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-      className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
-      required
-    />
-  </div>
-  </>
-)}
-
-
-
+            </div>
           </div>
 
           <div>
-            <label className="block text-white/70 text-sm font-medium mb-2">Email</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="h-5 w-5 text-white/40" />
@@ -221,14 +156,13 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
                 name="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
-                required
+                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white focus:outline-none focus:border-[#B38B3F]/50"
+                placeholder="Email"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-white/70 text-sm font-medium mb-2">Role</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Shield className="h-5 w-5 text-white/40" />
@@ -236,49 +170,37 @@ export function UserEditModal({ member, onClose, onSave }: UserEditModalProps) {
               <select
                 name="role"
                 value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value as 'user' | 'sub_user' | 'super_admin' })}
-                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white focus:outline-none focus:border-[#B38B3F]/50"
               >
                 <option value="user">User</option>
-                <option value="sub_user">Sub User</option>
                 {canAssignGodMode && (
-                  <option value="super_admin">Super Admin</option>
+                  <>
+                    <option value="super_admin">Super Admin</option>
+                    <option value="executive">Executive</option>
+                  </>
                 )}
               </select>
             </div>
           </div>
 
-          <div>
-            <label className="block text-white/70 text-sm font-medium mb-2">Status</label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-3 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
-            >
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
-              {/* <option value="inactive">Inactive</option> */}
-            </select>
-          </div>
-
           {error && (
-            <div className="text-red-400 text-sm mb-4">
+            <div className="text-red-500 text-sm mt-2">
               {error}
             </div>
           )}
 
-          <div className="flex space-x-3 pt-4">
+          <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors"
+              className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-gradient-to-r from-[#B38B3F] to-[#FFD700] text-black font-medium rounded-lg hover:opacity-90 transition-opacity"
+              className="px-4 py-2 bg-[#B38B3F] hover:bg-[#B38B3F]/80 text-white rounded-lg transition-colors"
             >
               Save Changes
             </button>

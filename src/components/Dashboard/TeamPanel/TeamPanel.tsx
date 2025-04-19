@@ -177,6 +177,12 @@ export function TeamPanel({ onClose }: TeamPanelProps) {
     const confirmDelete = window.confirm("Are you sure you want to delete this team member?");
     if (!confirmDelete) return;
   
+   // Prevent users from deleting themselves
+   if (email === user?.email) {
+     alert("You cannot delete your own account from the team panel.");
+     return;
+   }
+
     const token = sessionStorage.getItem("token");
     if (!token) return;
   

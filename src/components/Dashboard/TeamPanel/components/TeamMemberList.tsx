@@ -1,5 +1,5 @@
 import React from 'react';
-import { PenSquare, Trash2, Shield, Ban, LogIn, UserCheck, ArrowLeft } from 'lucide-react';
+import { PenSquare, Trash2, Shield, Ban, LogIn, UserCheck, ArrowLeft, Key } from 'lucide-react';
 import { useAuth } from '../../../../hooks/useAuth';
 
 interface TeamMemberListProps {
@@ -119,32 +119,32 @@ export function TeamMemberList({ members, canManageTeam, onEdit, onDelete, onSus
               <td className="py-4 px-4">
                 {member.role !== 'admin' && member.role !== 'super_admin' &&  member.status !== 'pending' && (
                   <div className="flex items-center justify-end space-x-2">
+                    {/* Edit Password Button */}
                     <button
-                      // disabled={!canEditMember(member)}
                       onClick={() =>  onEdit(member)}
-                      className={`p-2 ${canEditMember(member) ? 'hover:bg-white/10' : 'opacity-50 '} rounded-lg transition-colors group`}
-                      title="Edit Member"
+                      className="p-2 hover:bg-white/10 rounded-lg transition-colors group"
+                      title="Edit Password"
                     >
-                      <PenSquare className="w-4 h-4 text-white/70 group-hover:text-white" />
+                      <Key className="w-4 h-4 text-white/70 group-hover:text-white" />
                     </button>
                     
                     {member.status !== 'suspended' && (
                       <>
                         <button
-                          // disabled={!canEditMember(member)}
                           onClick={() =>  onSuspend(member)}
-                          className={`p-2 ${canEditMember(member) ? 'hover:bg-amber-500/20' : 'opacity-50 '} rounded-lg transition-colors group`}
+                          className="p-2 hover:bg-amber-500/20 rounded-lg transition-colors group"
                           title="Suspend Member"
                         >
                           <Ban className="w-4 h-4 text-amber-400/70 group-hover:text-amber-400" />
                         </button>
+                        
+                        {/* Login as User Button */}
                         <button
-                          disabled={!canEditMember(member)}
-                          onClick={() => canEditMember(member) && onLogin(member)}
-                          className={`p-2 ${canEditMember(member) ? 'hover:bg-[#B38B3F]/20' : 'opacity-50 cursor-not-allowed'} rounded-lg transition-colors group relative`}
+                          onClick={() => onLogin(member)}
+                          className="p-2 hover:bg-[#B38B3F]/20 rounded-lg transition-colors group relative"
                           title="Login as User"
                         >
-                          <LogIn className={`w-4 h-4 ${canEditMember(member) ? 'text-[#B38B3F] group-hover:text-[#FFD700]' : 'text-[#B38B3F]/40'}`} />
+                          <LogIn className="w-4 h-4 text-[#B38B3F] group-hover:text-[#FFD700]" />
                           <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                             Login as User
                           </span>
@@ -156,9 +156,9 @@ export function TeamMemberList({ members, canManageTeam, onEdit, onDelete, onSus
                 )}
                  <div className="flex items-center justify-end space-x-2">
                 <button
-                      // disabled={!canEditMember(member)}
-                      onClick={() =>  onDelete(member.email)}
-                      // className={`p-2 ${canEditMember(member) ? 'hover:bg-red-500/20' : 'opacity-50 '} rounded-lg transition-colors group`}
+                     onClick={() => onDelete(member.email)}
+                     disabled={member.email === currentUser?.email}
+                     className={`p-2 ${member.email === currentUser?.email ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-500/20'} rounded-lg transition-colors group`}
                       title="Delete Member"
                     >
                       <Trash2 className="w-4 h-4 text-red-400/70 group-hover:text-red-400" />

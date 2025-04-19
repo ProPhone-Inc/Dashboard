@@ -14,12 +14,20 @@ export function ReactivateUserModal({ user, onClose, modalRef, onConfirm }: Reac
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleReactivate = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return;
     setIsSubmitting(true);
     try {
-      const response = await axios.post(`/api/auth/activate-user`, {
-        email:user.email,
-       
-      });
+      const response = await axios.post(
+        "/api/auth/activate-user",
+        { email: user.email }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+     
       if(response.data ==1){
         onConfirm();
 

@@ -1,6 +1,8 @@
 export default {
-  server: {
+  preview: {
     host: '0.0.0.0',
-    port: 4173 // Ensure this is set correctly
+    port: 3050,
+    allowedHosts: ['suite.prophone.io']
   }
 };
+

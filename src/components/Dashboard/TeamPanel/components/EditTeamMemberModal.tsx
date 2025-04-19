@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { X, User, Mail, Shield, Phone, Users, FileText, GitMerge } from 'lucide-react';
+import { X, User, Mail, Key, Lock, Phone, Users, FileText, GitMerge } from 'lucide-react';
 
 interface EditTeamMemberModalProps {
   member: any;
@@ -14,6 +14,9 @@ export function EditTeamMemberModal({ member, onClose, modalRef, onSave }: EditT
     ...member,
     permissions: ['phone', 'crm', 'docupro', 'proflow']
   });
+  const [password, setPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [passwordError, setPasswordError] = React.useState('');
   
   // Prevent editing owner/super_admin role
   React.useEffect(() => {
@@ -31,6 +34,20 @@ export function EditTeamMemberModal({ member, onClose, modalRef, onSave }: EditT
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password if provided
+    if (password || confirmPassword) {
+      if (password !== confirmPassword) {
+        setPasswordError('Passwords do not match');
+        return;
+      }
+      
+      if (password.length < 6) {
+        setPasswordError('Password must be at least 6 characters');
+        return;
+      }
+    }
+    
     const token = sessionStorage.getItem("token");
     if (!token) return;
     const res = await axios.post("/api/auth/edit-team-member",{formData,oldemail:member.email}, {
@@ -40,7 +57,6 @@ export function EditTeamMemberModal({ member, onClose, modalRef, onSave }: EditT
     });
     if (res.data ==1){
       onSave(formData);
-
     }
   };
 
@@ -68,7 +84,7 @@ export function EditTeamMemberModal({ member, onClose, modalRef, onSave }: EditT
         </button>
 
         <div className="flex items-center space-x-3 mb-6">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B38B3F]/20 to-[#FFD700]/10 flex items-center justify-center border border-[#B38B3F]/30">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B38B3F]/20 to-[#FFD700]/10 flex items-center justify-center border border-[#B38B3F]/30 relative">
             <User className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -109,26 +125,41 @@ export function EditTeamMemberModal({ member, onClose, modalRef, onSave }: EditT
               />
             </div>
           </div>
-{/* 
+
           <div>
-            <label className="block text-white/70 text-sm font-medium mb-2">Role</label>
+            <label className="block text-white/70 text-sm font-medium mb-2">Change Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Shield className="h-5 w-5 text-white/40" />
+                <Key className="h-5 w-5 text-white/40" />
               </div>
-              <select
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-              >
-                <option value="member">Team Member</option>
-                <option value="manager">Team Manager</option>
-              </select>
-              <p className="mt-1 text-xs text-white/50">
-                Team managers can add, edit, and remove team members. Admin panel access is restricted.
-              </p>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
+                placeholder="New password (leave empty to keep current)"
+              />
             </div>
-          </div> */}
+          </div>
+          
+          <div>
+            <label className="block text-white/70 text-sm font-medium mb-2">Confirm Password</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock className="h-5 w-5 text-white/40" />
+              </div>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg text-white"
+                placeholder="Confirm new password"
+              />
+            </div>
+            {passwordError && (
+              <p className="text-red-400 text-sm mt-1">{passwordError}</p>
+            )}
+          </div>
 
           <div>
             <label className="block text-white/70 text-sm font-medium mb-2">Status: {formData.status}</label>
@@ -157,7 +188,7 @@ export function EditTeamMemberModal({ member, onClose, modalRef, onSave }: EditT
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors"
+              className="flex-1 px-4 py-2 bg-gradient-to-r from-[#B38B3F] to-[#FFD700] text-black font-medium rounded-lg hover:opacity-90 transition-opacity"
             >
               Save Changes
             </button>

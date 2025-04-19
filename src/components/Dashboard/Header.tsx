@@ -1,11 +1,9 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import { Bell, Menu, X, User, LogOut, Calendar, MessageSquare, Shield, HelpCircle, Settings, Mail, CreditCard, Ban, ArrowLeft } from 'lucide-react';
+import { Menu, X, User, LogOut, Calendar, MessageSquare, Shield, HelpCircle, Settings, CreditCard, Ban, ArrowLeft } from 'lucide-react';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { CalendarModal } from './Calendar';
 import { useAuth } from '../../hooks/useAuth';
-import { useSystemNotifications } from '../../hooks/useSystemNotifications';
-import { SystemNotificationsPanel } from './SystemNotificationsPanel';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useDB } from '../../hooks/useDB';
 import { SettingsModal } from '../SettingsModal';
@@ -57,19 +55,14 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
   const [showMessagesDropdown, setShowMessagesDropdown] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showAppDrawer, setShowAppDrawer] = useState(false);
   const [showRemoveAdsModal, setShowRemoveAdsModal] = useState(false);
-  const [showEmailDropdown, setShowEmailDropdown] = useState(false);
-  const { unreadCount: unreadNotifications } = useSystemNotifications();
   const { sendNotification } = useNotifications();
   const { used: smsUsed, limit: smsLimit } = useSMSUsage();
   const { login } = useAuth();
   const menuRef = React.useRef<HTMLDivElement>(null);
   const readMessageIds = React.useRef<Set<string>>(new Set());
   const messagesRef = React.useRef<HTMLDivElement>(null);
-  const emailRef = React.useRef<HTMLDivElement>(null);
-  const notificationsRef = React.useRef<HTMLDivElement>(null);
   const appDrawerRef = React.useRef<HTMLDivElement>(null);
   const totalUnreadCount = messages.filter(msg => !msg.read).length;
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -81,14 +74,6 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
   
   useClickOutside(messagesRef, () => {
     setShowMessagesDropdown(false);
-  });
-  
-  useClickOutside(emailRef, () => {
-    setShowEmailDropdown(false);
-  });
-  
-  useClickOutside(notificationsRef, () => {
-    setShowNotifications(false);
   });
 
   useClickOutside(appDrawerRef, () => {
@@ -197,94 +182,6 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
           </button>
         )}
 
-        <div className="relative" ref={emailRef}>
-          <div 
-            onClick={() => setShowEmailDropdown(!showEmailDropdown)}
-            className="relative w-10 h-10 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
-          >
-            <Mail className="w-5 h-5" />
-            <span className="absolute top-1 right-1 min-w-[18px] h-[18px] rounded-full bg-[#FFD700] text-black text-xs font-medium flex items-center justify-center px-1">
-              15
-            </span>
-          </div>
-          
-          {showEmailDropdown && (
-            <div className="fixed right-4 mt-2 w-96 bg-zinc-900 border border-[#B38B3F]/30 rounded-xl shadow-2xl overflow-hidden z-[50]">
-              <div className="p-4 border-b border-[#B38B3F]/20">
-                <h3 className="text-lg font-bold text-white">Email</h3>
-                <p className="text-sm text-white/60">15 unread emails</p>
-              </div>
-              
-              <div className="max-h-[400px] overflow-y-auto">
-                {[
-                  {
-                    id: '1',
-                    subject: 'New Property Listing',
-                    from: 'Sarah Johnson',
-                    preview: 'I wanted to share this amazing property that just came on the market...',
-                    time: '10 mins ago',
-                    avatar: 'https://randomuser.me/api/portraits/women/44.jpg'
-                  },
-                  {
-                    id: '2',
-                    subject: 'Meeting Follow-up',
-                    from: 'Mike Chen',
-                    preview: 'Thank you for taking the time to discuss the investment opportunity...',
-                    time: '1 hour ago',
-                    avatar: 'https://randomuser.me/api/portraits/men/22.jpg'
-                  },
-                  {
-                    id: '3',
-                    subject: 'Contract Review',
-                    from: 'Emma Wilson',
-                    preview: 'Please find attached the revised contract for your review...',
-                    time: '2 hours ago',
-                    avatar: 'https://randomuser.me/api/portraits/women/28.jpg'
-                  }
-                ].map((email) => (
-                  <div
-                    key={email.id}
-                    onClick={() => {
-                      setShowEmailDropdown(false);
-                      onPageChange?.('email-inbox');
-                    }}
-                    className="w-full p-4 hover:bg-white/5 transition-colors border-b border-[#B38B3F]/10 text-left flex items-start space-x-3 cursor-pointer"
-                  >
-                    <div className="relative">
-                      <div className="w-10 h-10 rounded-full overflow-hidden">
-                        <img 
-                          src={email.avatar}
-                          alt={email.from}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#FFD700] border-2 border-zinc-900" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-white">{email.from}</div>
-                      <div className="text-xs text-white/40 mb-1">{email.time}</div>
-                      <div className="text-sm font-medium text-white/90">{email.subject}</div>
-                      <p className="text-sm text-white/60 truncate mt-1">{email.preview}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="p-3 border-t border-[#B38B3F]/20">
-                <button 
-                  onClick={() => {
-                    setShowEmailDropdown(false);
-                    onPageChange?.('email-inbox');
-                  }}
-                  className="w-full py-2 text-center text-[#FFD700] hover:text-[#FFD700]/80 font-medium transition-colors cursor-pointer"
-                >
-                  View All Emails
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
         <div className="relative" ref={messagesRef}>
           <div 
             onClick={() => setShowMessagesDropdown(!showMessagesDropdown)}
@@ -382,24 +279,6 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
           />
         )}
 
-        <div className="relative" ref={notificationsRef}>
-          <button 
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative w-10 h-10 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors group"
-          >
-            <Bell className="w-5 h-5" />
-            {unreadNotifications > 0 && (
-              <span className="absolute top-1 right-1 min-w-[18px] h-[18px] rounded-full bg-[#FFD700] text-black text-xs font-medium flex items-center justify-center px-1">
-                {unreadNotifications}
-              </span>
-            )}
-          </button>
-          
-          {showNotifications && (
-            <SystemNotificationsPanel onClose={() => setShowNotifications(false)} />
-          )}
-        </div>
-
         {showSettings && (
           <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} initialSection="billing" />
         )}
@@ -492,7 +371,7 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
                   <HelpCircle className="w-4 h-4 mr-3 text-white/70" />
                   <span>Help & Support</span>
                 </button>
-                {user?.originalUser && (user?.originalUser?.role === 'super_admin' || user?.originalUser?.role === 'owner') && (
+                {user?.originalUser && (
                   <button 
                     onClick={() => {
                       if (user.originalUser) {
@@ -511,9 +390,9 @@ function Header({ user, onLogout, collapsed, activePage, messages, onPageChange 
                   >
                     <ArrowLeft className="w-4 h-4 mr-3" />
                     <span className="whitespace-nowrap">
-                      Return to {user?.originalUser?.role === 'owner' || user?.originalUser?.role === 'super_admin' 
-                        ? (user?.originalUser?.loginOrigin === 'team_panel' ? 'Team Panel' : 'Admin Panel')
-                        : (user?.originalUser?.loginOrigin === 'team_panel' ? 'Team Panel' : 'Admin Panel')}
+                      {user?.originalUser?.loginOrigin === 'team_panel' 
+                        ? 'Return to Team Panel' 
+                        : 'Return to Admin Panel'}
                     </span>
                   </button>
                 )}

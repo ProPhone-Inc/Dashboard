@@ -174,7 +174,6 @@ export function CreateUserModal({ onClose, onSave }: CreateUserModalProps) {
                 className={`w-full pl-10 pr-4 py-2 bg-zinc-800 border border-[#B38B3F]/20 rounded-lg ${currentUser?.role === 'owner' ? 'text-white' : 'text-white/40'}`}
               >
                 <option value="user">User</option>
-                <option value="sub_user">Sub User</option>
                 {canAssignGodMode && (
                   <option value="super_admin">Super Admin</option>
                 )}

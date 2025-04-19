@@ -330,16 +330,6 @@ export function Dashboard() {
                 {activePage === 'dashboard' && (
                   <div>
                     <StatsCards />
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                      <div className="lg:col-span-2 space-y-6">
-                        <StatusTracking />
-                        <SMSPerformanceCard />
-                      </div>
-                      
-                      <div className="space-y-6">
-                        <TopContacts />
-                      </div>
-                    </div>
                   </div>
                 )}
                 </>)}
@@ -383,16 +373,6 @@ export function Dashboard() {
                     <h2 className="text-2xl font-bold text-white mb-4">DocuPro System Removed</h2>
                     <p className="text-white/70">The document system functionality has been removed from this application.</p>
                   </div>
-                )}
-                {activePage.startsWith('email-') && (
-                  <ErrorBoundary>
-                    <Suspense fallback={<ComponentLoader />}>
-                      <div className="p-8 text-center">
-                        <h2 className="text-2xl font-bold text-white mb-4">Email System Removed</h2>
-                        <p className="text-white/70">The email functionality has been removed from this application.</p>
-                      </div>
-                    </Suspense>
-                  </ErrorBoundary>
                 )}
               </>
             </div>

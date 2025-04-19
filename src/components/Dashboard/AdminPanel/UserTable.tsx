@@ -179,6 +179,23 @@ export function UserTable({ users, onEdit, onDelete, onSuspend, onBan, onReactiv
                       <Trash2 className="w-4 h-4 text-red-400/70 group-hover:text-red-400" />
                     </button>
 
+                   {user.status !== 'suspended' ? (
+                     <button
+                       onClick={() => onSuspend(user)}
+                       className="p-2 hover:bg-amber-500/20 rounded-lg transition-colors group"
+                       title="Suspend User"
+                     >
+                       <Ban className="w-4 h-4 text-amber-400/70 group-hover:text-amber-400" />
+                     </button>
+                   ) : (
+                     <button
+                       onClick={() => onReactivate(user)}
+                       className="p-2 hover:bg-emerald-500/20 rounded-lg transition-colors group"
+                       title="Reactivate User"
+                     >
+                       <UserCheck className="w-4 h-4 text-emerald-400/70 group-hover:text-emerald-400" />
+                     </button>
+                   )}
                   
                     {user.status !== 'suspended' ? (
                       <button

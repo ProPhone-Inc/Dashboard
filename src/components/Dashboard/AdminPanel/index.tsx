@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, CreditCard, Bell, Mail, Bot, BarChart2 } from 'lucide-react';
+import { Shield, Plus, Mail, Bot } from 'lucide-react';
 import { UserStats } from './UserStats';
 import { UserTable } from './UserTable';
 import { UserEditModal } from './UserEditModal';
@@ -9,9 +9,7 @@ import { CreateUserModal } from './CreateUserModal';
 import { useAuth } from '../../../hooks/useAuth';
 import { SuspendUserModal } from './SuspendUserModal';
 import { BanUserModal } from './BanUserModal';
-import { ReportingModal } from './ReportingModal';
 import { ReactivateUserModal } from './ReactivateUserModal';
-import { StripeBillingModal } from './StripeBillingModal';
 import { NotificationsModal } from './NotificationsModal';
 import { CopilotSettingsModal } from './CopilotSettingsModal';
 import { AISettingsModal } from './AISettingsModal';
@@ -59,8 +57,6 @@ function AdminPanel() {
   const [showBanList, setShowBanList] = useState(false);
   const [showBillingModal, setShowBillingModal] = useState(false);
   const [showAISettings, setShowAISettings] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showReportingModal, setShowReportingModal] = useState(false);
   const [actionSuccess, setActionSuccess] = useState<{message: string, type: string} | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
@@ -407,26 +403,8 @@ function AdminPanel() {
       {showBanList && (
         <BanListModal onClose={() => setShowBanList(false)} users={users} />
       )}
-      
-      {showBillingModal && (
-        <StripeBillingModal onClose={() => setShowBillingModal(false)} />
-      )}
-      
-      {showBillingModal && (
-        <StripeBillingModal onClose={() => setShowBillingModal(false)} />
-      )}
-      
       {showAISettings && (
         <AISettingsModal onClose={() => setShowAISettings(false)} />
-      )}
-
-      {showNotifications && (
-        <NotificationsModal 
-          onClose={() => setShowNotifications(false)} 
-          onOpenEmailTemplates={() => {
-            setShowNotifications(false);
-          }}
-        />
       )}
 
       {/* Header */}
@@ -449,33 +427,6 @@ function AdminPanel() {
                 >
                   <Shield className="w-5 h-5" />
                   <span>Ban List</span>
-                </button>
-              )}
-              {currentUser?.role === 'owner' && (
-                <button 
-                  onClick={() => setShowNotifications(true)}
-                  className="flex items-center space-x-2 bg-gradient-to-r from-[#B38B3F]/20 to-[#FFD700]/10 text-[#FFD700] px-4 py-2 rounded-xl font-medium border border-[#B38B3F]/20 hover:border-[#B38B3F]/40 hover:shadow-lg hover:shadow-[#B38B3F]/20 transition-all duration-300"
-                >
-                  <Bell className="w-5 h-5" />
-                  <span>Notifications</span>
-                </button>
-              )}
-              {currentUser?.role === 'owner' && (
-                <button 
-                  onClick={() => setShowReportingModal(true)}
-                  className="flex items-center space-x-2 bg-gradient-to-r from-[#B38B3F]/20 to-[#FFD700]/10 text-[#FFD700] px-4 py-2 rounded-xl font-medium border border-[#B38B3F]/20 hover:border-[#B38B3F]/40 hover:shadow-lg hover:shadow-[#B38B3F]/20 transition-all duration-300"
-                >
-                  <BarChart2 className="w-5 h-5" />
-                  <span>Reports</span>
-                </button>
-              )}
-              {currentUser?.role === 'owner' && (
-                <button 
-                  onClick={() => setShowBillingModal(true)}
-                  className="flex items-center space-x-2 bg-gradient-to-r from-[#635BFF]/20 to-[#635BFF]/10 text-[#635BFF] px-4 py-2 rounded-xl font-medium border border-[#635BFF]/20 hover:border-[#635BFF]/40 hover:shadow-lg hover:shadow-[#635BFF]/20 transition-all duration-300"
-                >
-                  <CreditCard className="w-5 h-5" />
-                  <span>Stripe Billing</span>
                 </button>
               )}
                 <button 
@@ -586,11 +537,6 @@ function AdminPanel() {
           </button>
         </div>
       </div>
-      
-      {/* Reporting Modal */}
-      {showReportingModal && (
-        <ReportingModal onClose={() => setShowReportingModal(false)} />
-      )}
     </div>
   );
 }

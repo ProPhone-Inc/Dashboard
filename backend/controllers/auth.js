@@ -127,7 +127,7 @@ exports.addteammember = async (req, res) => {
     { $push: { members: newMember } },
     { upsert: true } 
   );
-  const inviteUrl = `${process.env.CLIENT_URL || "https://prophonedev.com"}/register?token=${inviteToken}&email=${encodeURIComponent(memberData.email)}&name=${encodeURIComponent(memberData.name)}&role=${encodeURIComponent(memberData.role)}`;
+  const inviteUrl = `${process.env.CLIENT_URL || "https://suite.prophone.io"}/register?token=${inviteToken}&email=${encodeURIComponent(memberData.email)}&name=${encodeURIComponent(memberData.name)}&role=${encodeURIComponent(memberData.role)}`;
 
   const emailBody = `
     Dear ${memberData.name},
